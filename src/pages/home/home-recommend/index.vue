@@ -31,18 +31,18 @@
              <!-- 内容 -->
       <view class="monthes_content">
         <view class="monthes_item"
-              v-for="(item) in recommends"
+              v-for="(item,index) in monthes.items"
               :key="item.id">
-              <image mode='aspectFill'
+              <!-- <image mode='aspectFill'
                    :src="item.thumb">
-            </image>
+            </image> -->
           <!-- 父传子 -->
-          <!-- <go-detail :list='monthes.items'
+          <go-detail :list='monthes.items'
                      :index='index'>
             <image mode='aspectFill'
                    :src="item.thumb+item.rule.replace('$<Height>',360)">
             </image>
-          </go-detail> -->
+          </go-detail>
         </view>
       </view>
     </view>
@@ -53,17 +53,17 @@
       </view>
       <view class="hots_content">
           <view class="hots_item"
-              v-for="(item) in hots"
+              v-for="(item,index) in hots"
               :key="item.id">
-            <image mode='widthFix'
+            <!-- <image mode='widthFix'
                    :src="item.src">
-            </image>
-          <!-- <go-detail :list='hots'
+            </image> -->
+          <go-detail :list='hots'
                      :index='index'>
             <image mode='widthFix'
                    :src="item.thumb">
             </image>
-          </go-detail> -->
+          </go-detail>
         </view>
       </view>
    </view>
@@ -72,7 +72,11 @@
 
 <script>
 import moment from 'moment';
+import goDetail from "@/components/goDetail";
 export default {
+   components: {
+    goDetail
+  },
   // 这是一个组件不是页面，能用的生命周期函数mounted
   data(){
     return{
@@ -136,7 +140,11 @@ export default {
        // 	“热门” 列表，如果没有加载的内容了展示弹窗
       if (res.vertical === 0) {
         this.hasMore = false;
-        this.showToast()
+          // uni.showToast({
+          //       title:"没有了",
+          //       icon:"none"
+          //   })
+          console.log('没有了')
         return;
       }
       if (this.recommends.length === 0) {
@@ -146,7 +154,10 @@ export default {
         // console.log(res.homepage[2]);
         this.monthes.MM = moment(this.monthes.stime).format('MM')
         this.monthes.DD = moment(this.monthes.stime).format('DD')
-      } 
+      }  else {
+        // 请求新的数组，拼接
+        this.hots = [...this.hots, ...res.vertical];
+      }
       },
       // 滚动条触底事件
      handleTolower () {
@@ -155,7 +166,11 @@ export default {
         this.params.skip += this.params.limit;
         this.getList();
       } else {
-        this.showToast()
+          uni.showToast({
+                title:"没有了",
+                icon:"none"
+            })
+            console.log('没有了')
       }
     }
   }
@@ -207,8 +222,11 @@ export default {
         display: flex;
         flex-wrap: wrap;
         .monthes_item {
-          width: 25%;
+          width: 33.33%;
           border: 5rpx solid #fff;
+          image{
+            background-color: pink;
+          }
         }
       }
     }
@@ -229,6 +247,9 @@ export default {
         .hots_item {
           width: 33.33%;
           border: 5rpx solid #fff;
+          image{
+            background-color:green;
+          }
         }
       }
 }

@@ -17,10 +17,11 @@
 
     <!-- 列表 -->
     <view class="album_list">
-      <view class="album_item"
+      <navigator class="album_item"
                  v-for="(item) in album"
                  :key="item.id"
-                 >
+                 :url='`/pages/album/index?id=${item.id}`'>
+        
         <view class="album_image">
           
             <image mode='aspectFill'
@@ -34,7 +35,7 @@
             <view class="album_attention">+ 关注</view>
           </view>
         </view>
-      </view>
+    </navigator>
     </view>
 
 
@@ -78,7 +79,10 @@ export default {
       // 如果返回的列表为空 ，表示没有数据了
       if (res.album.length === 0) {
         this.hasMore = false;
-        
+        uni.showToast({
+                title:"没有了",
+                icon:"none"
+            })
         return;
       }
       this.album = [...this.album, ...res.album]
@@ -140,7 +144,7 @@ export default {
       .album_desc {
         padding: 10rpx 0;
         font-size: 24rpx;
-
+  // 省略号显示内容
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
